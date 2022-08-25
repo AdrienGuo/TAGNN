@@ -4,6 +4,8 @@ import time
 from utils import build_graph, Data, split_validation
 from model import *
 
+import wandb
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', default='sample', help='dataset name: diginetica/yoochoose1_4/yoochoose1_64/sample')
 parser.add_argument('--batchSize', type=int, default=100, help='input batch size')
@@ -34,10 +36,16 @@ def main():
     train_data = Data(train_data, shuffle=True)
     test_data = Data(test_data, shuffle=False)
     # del all_train_seq, g
+
+    # 我猜這個 n_node 可以設得比實際的還大，但就是不能比較小
     if opt.dataset == 'diginetica':
         n_node = 43098
     elif opt.dataset == 'yoochoose1_64' or opt.dataset == 'yoochoose1_4':
         n_node = 37484
+    # elif opt.dataset == "dressipi1_64_all" or opt.dataset == "dressipi1_64_last":
+    #     n_node = 19025
+    elif "dressipi" in opt.dataset:
+        n_node = 19325
     else:
         n_node = 310
 
@@ -60,8 +68,18 @@ def main():
             best_result[1] = mrr
             best_epoch[1] = epoch
             flag = 1
+
+        # 傻眼，這裡的 criterion 給我寫 MMR，但其實 code 裏面是 mrr
+        # 更扯的是，還真的有 MMR 這個東西，讓我還研究了一下...
+        # print('\tRecall@20:\t%.4f\tMMR@20:\t%.4f\tEpoch:\t%d,\t%d'% (best_result[0], best_result[1], best_epoch[0], best_epoch[1]))
         print('Best Result:')
-        print('\tRecall@20:\t%.4f\tMMR@20:\t%.4f\tEpoch:\t%d,\t%d'% (best_result[0], best_result[1], best_epoch[0], best_epoch[1]))
+        print('\tRecall@100:\t%.4f\tMMR@100:\t%.4f\tEpoch:\t%d,\t%d'% (best_result[0], best_result[1], best_epoch[0], best_epoch[1]))
+
+        wandb.log({
+            "hit": hit,
+            "mrr": mrr
+        })
+
         bad_counter += 1 - flag
         if bad_counter >= opt.patience:
             break
@@ -71,4 +89,17 @@ def main():
 
 
 if __name__ == '__main__':
+
+    constants = {
+        "epochs": opt.epoch,
+        "batch_size": opt.batchSize,
+        "lr": opt.lr,
+    }
+    wandb.init(
+        project="TAGNN",
+        entity="adrien88",
+        name=f"{opt.dataset}-e{opt.epoch}-b{opt.batchSize}",
+        config=constants
+    )
+
     main()
