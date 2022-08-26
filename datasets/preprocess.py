@@ -20,7 +20,7 @@ import ipdb
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', default='sample', help='dataset name: diginetica/yoochoose/dressipi/sample')
-parser.add_argument('--month', default="04", type=str, help='start month of training dataset')
+parser.add_argument('--date', default="2021-04", type=str, help='start date of training dataset')
 parser.add_argument('--cut', action='store_true', help='cut the test session')
 opt = parser.parse_args()
 print(opt)
@@ -281,12 +281,13 @@ elif opt.dataset == 'yoochoose':
     pickle.dump(seq64, open('yoochoose1_64/all_train_seq.txt', 'wb'))
 
 elif opt.dataset == "dressipi":
-    splitmonth = "01"
+    split_y_m = opt.date
+
     # 根據 test session 有沒有切分不同資料夾
     if opt.cut:
-        save_dir = f"dressipi_m{splitmonth}_cut_pur"
+        save_dir = f"dressipi_d{split_y_m}_cut_pur"
     elif not opt.cut:
-        save_dir = f"dressipi_m{splitmonth}_nocut_pur"
+        save_dir = f"dressipi_d{split_y_m}_nocut_pur"
 
     if not os.path.exists(f"{save_dir}"):
         os.makedirs(f"{save_dir}")
@@ -297,7 +298,7 @@ elif opt.dataset == "dressipi":
     # print(len(tr_seqs[-split64:]))
 
     # 在這裡切 train 的時間
-    train_splitdate = f"2021-{splitmonth}-01 00:00:00"
+    train_splitdate = f"{split_y_m}-01 00:00:00"
     train_splitdate = time.mktime(time.strptime(train_splitdate, "%Y-%m-%d %H:%M:%S"))
     split = [i for i in range(len(tr_dates)) if tr_dates[i] > train_splitdate]  # 回傳所有符合條件的 index
     split = split[0]  # 第一個就是最小的那個
