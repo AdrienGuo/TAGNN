@@ -1,4 +1,5 @@
 PAT
+datasets/sample*/
 datasets/dressipi*/
 datasets/yoochoose*/
 wandb/

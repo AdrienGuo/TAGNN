@@ -231,12 +231,11 @@ def train_test(model, train_data, test_data):
     average_loss = total_loss / len(slices)
     # 為什麼要印出 total_loss??
     print(f"Total loss: {total_loss:<6.3f} | Average loss: {average_loss:<6.3f}")
-    # print('\tLoss:\t%.3f' % total_loss)
 
-    wandb.log({
-        "Total loss": total_loss,
-        "Average loss": average_loss
-    })
+    # wandb.log({
+    #     "Total loss": total_loss,
+    #     "Average loss": average_loss
+    # })
 
     print('start predicting: ', datetime.datetime.now())
     model.eval()

@@ -75,10 +75,10 @@ def main():
         print('Best Result:')
         print('\tRecall@100:\t%.4f\tMMR@100:\t%.4f\tEpoch:\t%d,\t%d'% (best_result[0], best_result[1], best_epoch[0], best_epoch[1]))
 
-        wandb.log({
-            "hit": hit,
-            "mrr": mrr
-        })
+        # wandb.log({
+        #     "hit": hit,
+        #     "mrr": mrr
+        # })
 
         bad_counter += 1 - flag
         if bad_counter >= opt.patience:
@@ -90,16 +90,16 @@ def main():
 
 if __name__ == '__main__':
 
-    constants = {
-        "epochs": opt.epoch,
-        "batch_size": opt.batchSize,
-        "lr": opt.lr,
-    }
-    wandb.init(
-        project="TAGNN",
-        entity="adrien88",
-        name=f"{opt.dataset}-e{opt.epoch}-b{opt.batchSize}",
-        config=constants
-    )
+    # constants = {
+    #     "epochs": opt.epoch,
+    #     "batch_size": opt.batchSize,
+    #     "lr": opt.lr,
+    # }
+    # wandb.init(
+    #     project="TAGNN",
+    #     entity="your project name",
+    #     name="",
+    #     config=constants
+    # )
 
     main()

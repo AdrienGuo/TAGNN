@@ -20,8 +20,8 @@ import ipdb
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset', default='sample', help='dataset name: diginetica/yoochoose/dressipi/sample')
+parser.add_argument('--month', default="04", type=str, help='start month of training dataset')
 parser.add_argument('--cut', action='store_true', help='cut the test session')
-# parser.add_argument('--keep', default='all', help='決定資料集要保留多少')
 opt = parser.parse_args()
 print(opt)
 
@@ -125,36 +125,6 @@ for s in list(sess_clicks):
 # the date of sessions
 dates = list(sess_date.items())
 
-##########################################################
-# 選擇 session 的時間範圍
-# 應該要放到最後再選擇
-##########################################################
-# sessdate = "2021-04-01 00:00:00"
-# sessdate = time.mktime(time.strptime(sessdate, "%Y-%m-%d %H:%M:%S"))
-# dates = list(filter(lambda x: x[1] > sessdate, dates))
-
-
-# Split out test set based on dates
-# dates = list(sess_date.items())
-# maxdate = dates[0][1]
-
-# for _, date in dates:
-#     if maxdate < date:
-#         maxdate = date
-
-# # 7 days for test
-# splitdate = 0
-# if opt.dataset == 'yoochoose':
-#     splitdate = maxdate - 86400 * 1  # the number of seconds for a day：86400
-# elif opt.dataset == "dressipi":
-#     splitdate = maxdate - 86400 * 30  # use one month for test
-# else:
-#     splitdate = maxdate - 86400 * 7
-
-# print('Splitting date', splitdate)      # Yoochoose: ('Split date', 1411930799.0)
-# tra_sess = filter(lambda x: x[1] < splitdate, dates)
-# tes_sess = filter(lambda x: x[1] > splitdate, dates)
-
 
 ##########################################################
 # 依照時間切成 train 和 test
@@ -164,7 +134,6 @@ splitdate = time.mktime(time.strptime(splitdate, "%Y-%m-%d %H:%M:%S"))
 print('Splitting date', splitdate)      # Yoochoose: ('Split date', 1411930799.0)
 tra_sess = filter(lambda x: x[1] < splitdate, dates)
 tes_sess = filter(lambda x: x[1] > splitdate, dates)
-
 
 # Sort sessions by date
 tra_sess = sorted(tra_sess, key=operator.itemgetter(1))     # [(session_id, timestamp), (), ]
@@ -231,13 +200,13 @@ def process_seqs(iseqs, idates, keep):
     """
     Args:
         keep: all or last
-              all 的話會保留所有 session 的切片，last 只會保留最後一個
+              all 的話會保留所有 session 的切片，last 則不會做切片
     """
     out_seqs = []
     out_dates = []
     labs = []
     ids = []
-    # train
+    # train，要做切片
     if keep == "all":
         for id, seq, date in zip(range(len(iseqs)), iseqs, idates):
             for i in range(1, len(seq)):
@@ -246,7 +215,7 @@ def process_seqs(iseqs, idates, keep):
                 out_seqs += [seq[:-i]]
                 out_dates += [date]
                 ids += [id]
-    # test
+    # test，不用做切片
     elif keep == "last":
         for id, seq, date in zip(range(len(iseqs)), iseqs, idates):
             labs += [seq[-1]]
@@ -267,7 +236,6 @@ def process_seqs(iseqs, idates, keep):
     return out_seqs, out_dates, labs, ids
 
 
-# trian 要全部保留，test 只要保留最後一個
 tr_seqs, tr_dates, tr_labs, tr_ids = process_seqs(tra_seqs, tra_dates, keep="all")
 te_seqs, te_dates, te_labs, te_ids = process_seqs(tes_seqs, tes_dates, keep="last")
 tra = (tr_seqs, tr_labs)
