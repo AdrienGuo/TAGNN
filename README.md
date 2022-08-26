@@ -37,7 +37,7 @@ There is a small dataset sample included in the folder `datasets/`, which can be
 ### Dataset
 You need to run the datasets/preprocess.py first to generate the correct data format.
 ```
-python3 preprocess.py --dataset dressipi --month 04 --cut
+python3 preprocess.py --dataset dressipi --date 2021-04 --cut
 
 optional arguments:
 --dataset: dataset name
