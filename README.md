@@ -41,7 +41,7 @@ python3 preprocess.py --dataset dressipi --date 2021-04 --cut
 
 optional arguments:
 --dataset: dataset name
---month: start month of training dataset
+--date: start date of training dataset
 --cut: cut the test dataset
 ```
 **Tips:**  
