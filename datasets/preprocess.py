@@ -196,18 +196,18 @@ tra_ids, tra_dates, tra_seqs = obtian_tra()
 tes_ids, tes_dates, tes_seqs = obtian_tes()
 
 
-def process_seqs(iseqs, idates, keep):
+def process_seqs(iseqs, idates, cut):
     """
     Args:
-        keep: all or last
-              all 的話會保留所有 session 的切片，last 則不會做切片
+        cut: True or False
+             True 的話會做 session 的切片，False 則不會做切片
     """
     out_seqs = []
     out_dates = []
     labs = []
     ids = []
-    # train，要做切片
-    if keep == "all":
+    # train，一定要做切片
+    if cut:
         for id, seq, date in zip(range(len(iseqs)), iseqs, idates):
             for i in range(1, len(seq)):
                 tar = seq[-i]
@@ -215,8 +215,8 @@ def process_seqs(iseqs, idates, keep):
                 out_seqs += [seq[:-i]]
                 out_dates += [date]
                 ids += [id]
-    # test，不用做切片
-    elif keep == "last":
+    # test，可選擇要不要切片
+    else:
         for id, seq, date in zip(range(len(iseqs)), iseqs, idates):
             labs += [seq[-1]]
             # 在這裡加入隨機切 test session 的長度
@@ -227,7 +227,7 @@ def process_seqs(iseqs, idates, keep):
                 if cut_len == len(seq):
                     cut_len = cut_len - 1
                 out_seqs += [seq[:cut_len]]
-            # 不要隨機切 test session
+            # 不要隨機切 test session, RecSys Challenge 2022 的其中一項規定
             elif not opt.cut:
                 out_seqs += [seq[:-1]]
             out_dates += [date]
@@ -236,8 +236,8 @@ def process_seqs(iseqs, idates, keep):
     return out_seqs, out_dates, labs, ids
 
 
-tr_seqs, tr_dates, tr_labs, tr_ids = process_seqs(tra_seqs, tra_dates, keep="all")
-te_seqs, te_dates, te_labs, te_ids = process_seqs(tes_seqs, tes_dates, keep="last")
+tr_seqs, tr_dates, tr_labs, tr_ids = process_seqs(tra_seqs, tra_dates, cut=True)
+te_seqs, te_dates, te_labs, te_ids = process_seqs(tes_seqs, tes_dates, cut=opt.cut)
 tra = (tr_seqs, tr_labs)
 tes = (te_seqs, te_labs)
 print(len(tr_seqs))

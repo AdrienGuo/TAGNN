@@ -42,8 +42,6 @@ def main():
         n_node = 43098
     elif opt.dataset == 'yoochoose1_64' or opt.dataset == 'yoochoose1_4':
         n_node = 37484
-    # elif opt.dataset == "dressipi1_64_all" or opt.dataset == "dressipi1_64_last":
-    #     n_node = 19025
     elif "dressipi" in opt.dataset:
         n_node = 19325
     else:
