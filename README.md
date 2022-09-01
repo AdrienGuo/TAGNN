@@ -58,12 +58,11 @@ python3 main.py --dataset [dressipi*]
 ## Results
 My testing results:  
 I also tested on SR-GNN with the same dataset, and the performances of TAGNN are indeed a little bit better.
-
-| start month | 01     | 03     | 04     |
-|-------------|--------|--------|--------|
-| SR-GNN      | 11.111 | 11.528 | 11.294 |
-| TAGNN       | 11.6   | 11.778 | 11.847 |
-
+s
+| start month | 2020-01 | 2021-01 | 2021-03 | 2021-04 |
+|-------------|---------|---------|---------|---------|
+| SR-GNN      |         | 11.111  | 11.528  | 11.294  |
+| TAGNN       | 15.311  | 11.6    | 11.778  | 11.847  |
 
 ## Others
 Actually, the whole TAGNN code is based on SR-GNN (the research group basically consists of same people).  
