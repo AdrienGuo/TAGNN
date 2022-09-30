@@ -56,9 +56,9 @@ python3 main.py --dataset [dressipi*]
 
 
 ## Results
-My testing results:  
-I also tested on SR-GNN with the same dataset, and the performances of TAGNN are indeed a little bit better.
-s
+My testing results (MRR@100):  
+I also tested on SR-GNN with the same dataset, and the performances of TAGNN are indeed a little bit better.  
+
 | start month | 2020-01 | 2021-01 | 2021-03 | 2021-04 |
 |-------------|---------|---------|---------|---------|
 | SR-GNN      |         | 11.111  | 11.528  | 11.294  |
